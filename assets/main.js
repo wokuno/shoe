@@ -67,7 +67,7 @@ function alltrials() {
     result.forEach((trial) => {
       getSteps(trial["ID"]).then(function (steps) {
         count++;
-        if (steps > 0) {
+        if (steps > 100) {
           temp.push([
             trial["ID"],
             trial["StartTime"] * 1000,
@@ -93,7 +93,7 @@ function lifetime() {
     document.getElementById("totalSteps").innerHTML = steps;
     document.getElementById("totalDistance").innerHTML = distance + " Miles";
     console.log(getHealth(distance));
-    document.getElementById("health").innerHTML = getHealth(distance) + "%";
+    document.getElementById("health").innerHTML = getHealth(distance) + " Miles";
   });
 }
 
