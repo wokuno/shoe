@@ -88,6 +88,8 @@ func main() {
 
 	e.GET("/getAllData", getAllData)
 
+	e.GET("/getOutliers", getOutliersRoute)
+
 	// Start server
 	e.Logger.Fatal(e.Start(":1323"))
 }

@@ -1,7 +1,10 @@
 package main
 
 import (
+	"math"
 	"strconv"
+
+	"github.com/montanaflynn/stats"
 )
 
 // Helpers
@@ -32,6 +35,54 @@ func getTrialsComplete() []Trial {
 	}
 
 	return trials
+}
+
+func getOutliers() []int {
+	var lr []int
+	temp := getTrialsComplete()
+
+	for _, t := range temp {
+		for _, r := range t.SensorData {
+			num := (r.A2 + r.A3) - (r.A1 + r.A5)
+			if r.A1 != 0 && r.A2 != 0 && r.A3 != 0 && r.A4 != 0 && r.A5 != 0 {
+				lr = append(lr, num)
+			}
+		}
+	}
+
+	data := stats.LoadRawData(lr)
+
+	outliers, err := stats.QuartileOutliers(data)
+
+	if err != nil {
+		return []int{}
+	}
+
+	var out []int
+
+	for _, outlier := range outliers.Mild {
+		out = append(out, int(math.Round(outlier)))
+	}
+
+	val := stats.NormFit(data)
+	mean := int(val[0])
+	std := int(val[1])
+
+	sup := 0
+	pro := 0
+
+	for _, v := range out {
+		if v < 0 {
+			sup++
+		}
+		if v > 0 {
+			pro++
+		}
+	}
+
+	diff := math.Abs((float64(sup)-float64(pro))/float64(pro)) * 100
+
+	return []int{sup, pro, int(diff), mean, std}
 }
 
 // func getRows(trialid string) int {

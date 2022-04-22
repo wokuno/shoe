@@ -16,8 +16,18 @@ function getSteps(trailID) {
     });
 }
 
+function getPronation() {
+  return fetch("https://trana.fit/getOutliers", {
+    method: "GET",
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      return data;
+    });
+}
+
 function getDistance(steps) {
-  return Math.round((steps / 1672) * 100) / 100;
+  return Math.round((steps / 1294) * 100) / 100;
 }
 
 function getHealth(distance) {
@@ -94,6 +104,18 @@ function lifetime() {
     document.getElementById("totalDistance").innerHTML = distance + " Miles";
     console.log(getHealth(distance));
     document.getElementById("health").innerHTML = getHealth(distance) + " Miles";
+  });
+  getPronation().then((data) => {
+    var diff = data[2];
+    if (diff > 80) {
+      document.getElementById("pronation").innerHTML = "Pronated";
+    }else if (diff > 60) {
+      document.getElementById("pronation").innerHTML = "Mild Pronation";
+    }else if (diff > 40) {
+      document.getElementById("pronation").innerHTML = "Normal";
+    } else {
+      document.getElementById("pronation").innerHTML = "Supinated";
+    }
   });
 }
 

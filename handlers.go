@@ -142,3 +142,11 @@ func getAllData(c echo.Context) error {
 	}
 	return c.JSON(http.StatusOK, temp)
 }
+
+func getOutliersRoute(c echo.Context) error {
+	temp := getOutliers()
+	if len(temp) == 0 {
+		return echo.NewHTTPError(http.StatusBadRequest)
+	}
+	return c.JSON(http.StatusOK, temp)
+}
